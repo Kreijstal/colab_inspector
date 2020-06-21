@@ -164,7 +164,7 @@ def _fill_instance_spec(item, spec, preload=False):
   spec['length'] = len(keys)
 
   length = min(0, len(keys)) if preload else min(1000, len(keys))
-  keys.sort()
+  keys = sorted(keys)
   keys = keys[0:length]
   spec['keys'] = keys
 
@@ -173,6 +173,7 @@ def _fill_instance_spec(item, spec, preload=False):
     if preload:
       contents[str(key)] = _create_abbreviated_spec(getattr(item, key))
     else:
+      #print(key)
       contents[str(key)] = _create_spec_for(getattr(item, key), preload=True)
   spec['contents'] = contents
   spec['partial'] = preload
@@ -233,7 +234,7 @@ _FILTERED_GLOBAL_NS_ENTRIES = [
 
 def _fill_dict_spec(item, spec, preload=False, include_private=True, filter_global_ns=False):
   spec['spec_type'] = 'dict'
-  keys = item.keys()
+  keys = list(item)
   if not include_private:
     keys = [k for k in keys if not k.startswith('_')]
   if filter_global_ns:
@@ -242,7 +243,7 @@ def _fill_dict_spec(item, spec, preload=False, include_private=True, filter_glob
   spec['length'] = len(keys)
   length = min(10, len(keys)) if preload else min(100, len(keys))
 
-  keys.sort()
+  #keys= sorted(keys) TypeError: '<' not supported between instances of 'str' and 'tuple'
   keys = keys[0:length]
 
   contents = {}
